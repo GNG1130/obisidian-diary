@@ -1,6 +1,5 @@
 ---
-title: Welcome to Quartz
+title: 歡迎光臨，這邊是 Raven 的研究日誌
 ---
 
-This is a blank Quartz installation.
-See the [documentation](https://quartz.jzhao.xyz) for how to get started.
+希望未來可以順利在這邊記錄下每天的工作情形與研究狀況，並且透過 Graph 的方法整理自己所看到以及想到的內容。
