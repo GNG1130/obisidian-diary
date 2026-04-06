@@ -1,5 +1,6 @@
 ---
 title: 研究主題整理
+draft: false
 tags:
   - research-idea
 ---
