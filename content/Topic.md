@@ -19,7 +19,7 @@ Like Indexing the Documents with different methods like sparse and dense, and in
 **I GUESS SOMETHINGS MAYBE WORK**
 ### Make the workflow with the **knowledge graph** 
 - Using the LLM ot extract the keywords or some NER technique to make a **KG**(**K**nowledge **G**raph).
-- Maybe can refer to the HippoRAG v1.
+- Maybe can refer to the [[HippoRAG]] v1.
 
 ### Enhance the Benchmark
 
