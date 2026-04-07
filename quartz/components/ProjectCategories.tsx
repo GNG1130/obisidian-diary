@@ -35,43 +35,5 @@ export default (() => {
     )
   }
 
-  ProjectCategories.css = `
-    .project-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-    }
-
-    .project-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.7rem 0.9rem;
-      border-radius: 12px;
-      background: color-mix(in srgb, var(--light) 88%, var(--secondary) 12%);
-    }
-
-    .project-name {
-      font-weight: 600;
-      word-break: break-word;
-    }
-
-    .project-count {
-      min-width: 2rem;
-      text-align: center;
-      padding: 0.18rem 0.55rem;
-      border-radius: 999px;
-      background: white;
-      border: 1px solid var(--lightgray);
-      font-size: 0.9rem;
-    }
-
-    .empty-state {
-      color: var(--gray);
-      margin: 0;
-    }
-  `
-
   return ProjectCategories
 }) satisfies QuartzComponentConstructor

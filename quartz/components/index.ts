@@ -53,3 +53,4 @@ export {
 }
 export { default as ActivityHeatmap } from "./ActivityHeatmap"
 export { default as ProjectCategories } from "./ProjectCategories"
+export { default as HomeDashboard } from "./HomeDashboard"

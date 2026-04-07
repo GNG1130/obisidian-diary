@@ -22,7 +22,6 @@ export const defaultContentPageLayout: PageLayout = {
       condition: (page) => page.fileData.slug !== "index",
     }),
 
-    // 一般頁面顯示標題/資訊/標籤
     Component.ConditionalRender({
       component: Component.ArticleTitle(),
       condition: (page) => page.fileData.slug !== "index",
@@ -36,36 +35,34 @@ export const defaultContentPageLayout: PageLayout = {
       condition: (page) => page.fileData.slug !== "index",
     }),
 
-    // 首頁專用區塊
     Component.ConditionalRender({
-      component: Component.ActivityHeatmap(),
-      condition: (page) => page.fileData.slug === "index",
-    }),
-    Component.ConditionalRender({
-      component: Component.RecentNotes({
-        title: "最近編輯",
-        limit: 8,
-        showTags: false,
-      }),
+      component: Component.HomeDashboard(),
       condition: (page) => page.fileData.slug === "index",
     }),
   ],
 
   left: [
-    Component.PageTitle(),
-    Component.MobileOnly(Component.Spacer()),
-    Component.Flex({
-      components: [
-        {
-          Component: Component.Search(),
-          grow: true,
-        },
-        { Component: Component.Darkmode() },
-        { Component: Component.ReaderMode() },
-      ],
+    Component.ConditionalRender({
+      component: Component.PageTitle(),
+      condition: (page) => page.fileData.slug !== "index",
     }),
-
-    // 一般頁面才顯示 Explorer
+    Component.ConditionalRender({
+      component: Component.MobileOnly(Component.Spacer()),
+      condition: (page) => page.fileData.slug !== "index",
+    }),
+    Component.ConditionalRender({
+      component: Component.Flex({
+        components: [
+          {
+            Component: Component.Search(),
+            grow: true,
+          },
+          { Component: Component.Darkmode() },
+          { Component: Component.ReaderMode() },
+        ],
+      }),
+      condition: (page) => page.fileData.slug !== "index",
+    }),
     Component.ConditionalRender({
       component: Component.Explorer(),
       condition: (page) => page.fileData.slug !== "index",
@@ -73,13 +70,6 @@ export const defaultContentPageLayout: PageLayout = {
   ],
 
   right: [
-    // 首頁右側：專案分類
-    Component.ConditionalRender({
-      component: Component.ProjectCategories(),
-      condition: (page) => page.fileData.slug === "index",
-    }),
-
-    // 一般頁面右側：維持原本 Quartz 導覽
     Component.ConditionalRender({
       component: Component.Graph(),
       condition: (page) => page.fileData.slug !== "index",
@@ -95,7 +85,7 @@ export const defaultContentPageLayout: PageLayout = {
   ],
 }
 
-// components for pages that display lists of pages  (e.g. tags or folders)
+// components for pages that display lists of pages (e.g. tags or folders)
 export const defaultListPageLayout: PageLayout = {
   beforeBody: [Component.Breadcrumbs(), Component.ArticleTitle(), Component.ContentMeta()],
   left: [

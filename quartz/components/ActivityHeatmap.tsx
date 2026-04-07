@@ -75,44 +75,5 @@ export default (() => {
     )
   }
 
-  ActivityHeatmap.css = `
-    .activity-heatmap {
-      display: grid;
-      grid-template-columns: repeat(53, 12px);
-      gap: 4px;
-      overflow-x: auto;
-      padding-bottom: 0.4rem;
-    }
-
-    .heat-cell {
-      width: 12px;
-      height: 12px;
-      border-radius: 3px;
-      background: var(--lightgray);
-      display: inline-block;
-      flex: 0 0 auto;
-    }
-
-    .lvl-0 { opacity: 0.35; }
-    .lvl-1 { background: #d6f5df; }
-    .lvl-2 { background: #9ee6b0; }
-    .lvl-3 { background: #58c97b; }
-    .lvl-4 { background: #229a4f; }
-
-    .heatmap-legend {
-      margin-top: 0.8rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--gray);
-      font-size: 0.88rem;
-    }
-
-    .legend-cells {
-      display: flex;
-      gap: 4px;
-    }
-  `
-
   return ActivityHeatmap
 }) satisfies QuartzComponentConstructor
