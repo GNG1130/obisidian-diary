@@ -14,27 +14,22 @@ const RecentNotes = RecentNotesConstructor({
 export default (() => {
   function HomeDashboard(props: QuartzComponentProps) {
     return (
-      <div class="home-dashboard">
-        <section class="home-hero-card">
+      <div class="home-dashboard-stack">
+        <section class="hero-card">
           <h1>Raven's Research Page</h1>
           <p>
-            研究筆記、實驗紀錄與專案知識的小地方。
+            研究筆記、實驗紀錄與專案知識的簡潔入口。
+            從首頁快速查看近期活躍度、專案分類與最近編輯。
           </p>
         </section>
 
-        <div class="home-grid">
-          <aside class="home-sidebar">
-            <ProjectCategories {...props} />
-          </aside>
+        <ActivityHeatmap {...props} />
 
-          <main class="home-main">
-            <ActivityHeatmap {...props} />
+        <ProjectCategories {...props} />
 
-            <section class="home-card recent-card">
-              <RecentNotes {...props} />
-            </section>
-          </main>
-        </div>
+        <section class="dashboard-card recent-card">
+          <RecentNotes {...props} />
+        </section>
       </div>
     )
   }

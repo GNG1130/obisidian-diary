@@ -13,24 +13,24 @@ export default (() => {
     const items = Array.from(stats.entries()).sort((a, b) => b[1] - a[1])
 
     return (
-      <section class="home-card">
-        <div class="card-header">
+      <section class="dashboard-card">
+        <div class="dashboard-card-header">
           <h2>專案分類</h2>
           <span>{items.length} 個專案</span>
         </div>
 
-        <div class="project-list">
-          {items.length > 0 ? (
-            items.map(([name, count]) => (
+        {items.length > 0 ? (
+          <div class="project-grid">
+            {items.map(([name, count]) => (
               <div class="project-item">
                 <span class="project-name">{name}</span>
                 <span class="project-count">{count}</span>
               </div>
-            ))
-          ) : (
-            <p class="empty-state">尚未偵測到 project frontmatter。</p>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <p class="empty-state">尚未偵測到 project frontmatter。</p>
+        )}
       </section>
     )
   }

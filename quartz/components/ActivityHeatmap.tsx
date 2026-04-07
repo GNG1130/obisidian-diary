@@ -45,8 +45,8 @@ export default (() => {
     }
 
     return (
-      <section class="home-card">
-        <div class="card-header">
+      <section class="dashboard-card">
+        <div class="dashboard-card-header">
           <h2>活動熱力圖</h2>
           <span>最近 365 天</span>
         </div>
