@@ -34,10 +34,8 @@ export default (() => {
       dates.push(startOfDay(d))
     }
 
-    // GitHub-style: columns are weeks, rows are weekdays
-    // We pad the front so the first column starts on Sunday
     const firstDay = dates[0]
-    const frontPadding = firstDay.getDay() // 0=Sun, 6=Sat
+    const frontPadding = firstDay.getDay()
 
     const cells: HeatCell[] = []
 
@@ -59,13 +57,14 @@ export default (() => {
 
     const maxCount = Math.max(...cells.filter((c) => !c.empty).map((c) => c.count), 1)
 
-    const levelClass = (count: number) => {
-      if (count === 0) return "lvl-0"
+    const fillForCount = (count: number, empty?: boolean) => {
+      if (empty) return "transparent"
+      if (count === 0) return "var(--lightgray)"
       const ratio = count / maxCount
-      if (ratio <= 0.25) return "lvl-1"
-      if (ratio <= 0.5) return "lvl-2"
-      if (ratio <= 0.75) return "lvl-3"
-      return "lvl-4"
+      if (ratio <= 0.25) return "#d6f5df"
+      if (ratio <= 0.5) return "#9ee6b0"
+      if (ratio <= 0.75) return "#58c97b"
+      return "#229a4f"
     }
 
     const weeks: HeatCell[][] = []
@@ -73,7 +72,17 @@ export default (() => {
       weeks.push(cells.slice(i, i + 7))
     }
 
-    const weekdayLabels = ["日", "一", "二", "三", "四", "五", "六"]
+    const weekdayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
+    const cellSize = 10
+    const gap = 3
+    const labelWidth = 30
+    const topPadding = 2
+
+    const heatmapWidth = weeks.length * cellSize + (weeks.length - 1) * gap
+    const heatmapHeight = 7 * cellSize + 6 * gap
+    const svgWidth = labelWidth + 10 + heatmapWidth
+    const svgHeight = topPadding + heatmapHeight
 
     return (
       <section class="dashboard-card">
@@ -82,40 +91,62 @@ export default (() => {
           <span>最近 365 天</span>
         </div>
 
-        <div class="github-heatmap-wrapper">
-          <div class="weekday-labels">
-            {weekdayLabels.map((label) => (
-              <div class="weekday-label">{label}</div>
-            ))}
-          </div>
+        <div class="heatmap-svg-container">
+          <svg
+            class="heatmap-svg"
+            viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+            preserveAspectRatio="xMinYMin meet"
+            role="img"
+            aria-label="Activity heatmap for the last 365 days"
+          >
+            {weekdayLabels.map((label, row) => {
+              const y = topPadding + row * (cellSize + gap) + cellSize * 0.8
+              return (
+                <text
+                  key={label}
+                  x={0}
+                  y={y}
+                  class="heatmap-label"
+                >
+                  {label}
+                </text>
+              )
+            })}
 
-          <div class="github-heatmap">
-            {weeks.map((week, weekIdx) => (
-              <div class="week-column" key={`week-${weekIdx}`}>
-                {week.map((cell, dayIdx) =>
-                  cell.empty ? (
-                    <div class="heat-cell empty-cell" key={`empty-${weekIdx}-${dayIdx}`} />
-                  ) : (
-                    <div
-                      class={`heat-cell ${levelClass(cell.count)}`}
-                      title={`${cell.date}：${cell.count} 篇`}
-                      key={`${cell.date}-${dayIdx}`}
-                    />
-                  ),
-                )}
-              </div>
-            ))}
-          </div>
+            {weeks.map((week, col) =>
+              week.map((cell, row) => {
+                const x = labelWidth + 10 + col * (cellSize + gap)
+                const y = topPadding + row * (cellSize + gap)
+
+                return (
+                  <rect
+                    key={`${col}-${row}-${cell.date ?? "empty"}`}
+                    x={x}
+                    y={y}
+                    width={cellSize}
+                    height={cellSize}
+                    rx={2}
+                    ry={2}
+                    fill={fillForCount(cell.count, cell.empty)}
+                  >
+                    {!cell.empty && (
+                      <title>{`${cell.date}：${cell.count} 篇`}</title>
+                    )}
+                  </rect>
+                )
+              }),
+            )}
+          </svg>
         </div>
 
         <div class="heatmap-legend">
           <span>少</span>
           <div class="legend-cells">
-            <i class="heat-cell lvl-0"></i>
-            <i class="heat-cell lvl-1"></i>
-            <i class="heat-cell lvl-2"></i>
-            <i class="heat-cell lvl-3"></i>
-            <i class="heat-cell lvl-4"></i>
+            <i class="legend-cell lvl-0"></i>
+            <i class="legend-cell lvl-1"></i>
+            <i class="legend-cell lvl-2"></i>
+            <i class="legend-cell lvl-3"></i>
+            <i class="legend-cell lvl-4"></i>
           </div>
           <span>多</span>
         </div>
