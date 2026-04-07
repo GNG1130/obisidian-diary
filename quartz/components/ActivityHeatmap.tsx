@@ -87,8 +87,8 @@ export default (() => {
     return (
       <section class="dashboard-card">
         <div class="dashboard-card-header">
-          <h2>活動熱力圖</h2>
-          <span>最近 365 天</span>
+          <h2>Activity Heatmap</h2>
+          <span>Last 365 Days</span>
         </div>
 
         <div class="heatmap-svg-container">

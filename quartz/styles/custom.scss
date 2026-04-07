@@ -149,6 +149,53 @@
   border: 1px solid color-mix(in srgb, var(--lightgray) 75%, var(--secondary) 25%);
 }
 
+.project-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.project-name {
+  font-weight: 600;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.project-date {
+  font-size: 0.82rem;
+  color: var(--gray);
+  line-height: 1.35;
+}
+
+.project-count {
+  min-width: 2rem;
+  text-align: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: white;
+  border: 1px solid var(--lightgray);
+  font-size: 0.88rem;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.project-link {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.project-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  border-color: color-mix(in srgb, var(--secondary) 35%, var(--lightgray) 65%);
+}
+
+.project-link:hover .project-name {
+  color: var(--secondary);
+}
+
 .project-name {
   font-weight: 600;
   word-break: break-word;
