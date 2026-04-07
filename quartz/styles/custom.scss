@@ -2,7 +2,9 @@
 
 // put your custom CSS here!
 .page article {
-  max-width: 1240px;
+  max-width: 1600px;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 /* 只要首頁有 HomeDashboard，就套用這些樣式 */
@@ -35,21 +37,10 @@
   }
 }
 
-.home-hero-badge {
-  display: inline-block;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  background: white;
-  border: 1px solid var(--lightgray);
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--secondary);
-}
-
 .home-grid {
   display: grid;
-  grid-template-columns: minmax(260px, 0.9fr) minmax(0, 2.2fr);
-  gap: 1.25rem;
+  grid-template-columns: 300px 1fr;
+  gap: 1.5rem;
   align-items: start;
 }
 
@@ -57,7 +48,7 @@
 .home-main {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 
 .home-card,

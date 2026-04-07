@@ -16,11 +16,9 @@ export default (() => {
     return (
       <div class="home-dashboard">
         <section class="home-hero-card">
-          <div class="home-hero-badge">Knowledge Dashboard</div>
           <h1>Raven's Research Page</h1>
           <p>
-            研究筆記、實驗紀錄與專案知識的簡潔入口。
-            從首頁快速查看近期活躍度、最近編輯與專案分類。
+            研究筆記、實驗紀錄與專案知識的小地方。
           </p>
         </section>
 
