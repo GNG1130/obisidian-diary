@@ -1,5 +1,5 @@
 import { QuartzComponentConstructor, QuartzComponentProps } from "./types"
-import { FullSlug, resolveRelative, simplifySlug } from "../util/path"
+import { FullSlug, resolveRelative } from "../util/path"
 
 function getFileDate(file: QuartzComponentProps["allFiles"][number]): Date | null {
   return file.dates?.modified ?? file.dates?.created ?? file.dates?.published ?? null
@@ -15,7 +15,6 @@ function formatDate(date: Date) {
 type ProjectInfo = {
   count: number
   latestDate: Date | null
-  landingSlug: FullSlug | null
 }
 
 export default (() => {
@@ -24,23 +23,15 @@ export default (() => {
 
     for (const file of allFiles) {
       const project = file.frontmatter?.project
-      if (!project || typeof project !== "string" || !file.slug) continue
+      if (!project || typeof project !== "string") continue
 
       const fileDate = getFileDate(file)
       const existing = stats.get(project)
-
-      // 關鍵：用 simplifySlug 判斷 project landing page
-      // 例如 content/rag-research/index.md 的 FullSlug 可能是 rag-research/index
-      // simplify 後才會是 rag-research
-      const simplified = simplifySlug(file.slug)
-      const isLandingPage = simplified === project
-      const candidateLanding = isLandingPage ? (file.slug as FullSlug) : existing?.landingSlug ?? null
 
       if (!existing) {
         stats.set(project, {
           count: 1,
           latestDate: fileDate,
-          landingSlug: candidateLanding,
         })
       } else {
         let latestDate = existing.latestDate
@@ -51,7 +42,6 @@ export default (() => {
         stats.set(project, {
           count: existing.count + 1,
           latestDate,
-          landingSlug: existing.landingSlug ?? candidateLanding,
         })
       }
     }
@@ -75,12 +65,10 @@ export default (() => {
         {items.length > 0 ? (
           <div class="project-grid">
             {items.map(([name, info]) => {
-              const href =
-                info.landingSlug != null
-                  ? resolveRelative(fileData.slug!, info.landingSlug)
-                  : undefined
+              const target = `${name}/index` as FullSlug
+              const href = resolveRelative(fileData.slug!, target)
 
-              return href ? (
+              return (
                 <a class="project-item project-link internal" href={href}>
                   <div class="project-main">
                     <span class="project-name">{name}</span>
@@ -90,16 +78,6 @@ export default (() => {
                   </div>
                   <span class="project-count">{info.count}</span>
                 </a>
-              ) : (
-                <div class="project-item project-link project-disabled">
-                  <div class="project-main">
-                    <span class="project-name">{name}</span>
-                    <span class="project-date">
-                      最近更新：{info.latestDate ? formatDate(info.latestDate) : "未知"}
-                    </span>
-                  </div>
-                  <span class="project-count">{info.count}</span>
-                </div>
               )
             })}
           </div>
