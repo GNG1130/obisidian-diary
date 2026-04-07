@@ -1,7 +1,7 @@
 import { QuartzComponentConstructor, QuartzComponentProps } from "./types"
 
 function projectToHref(projectName: string) {
-  return `./${projectName}`
+  return `${projectName}`
 }
 
 function getFileDate(file: QuartzComponentProps["allFiles"][number]): Date | null {
