@@ -51,3 +51,5 @@ export {
   Flex,
   ConditionalRender,
 }
+export { default as ActivityHeatmap } from "./ActivityHeatmap"
+export { default as ProjectCategories } from "./ProjectCategories"

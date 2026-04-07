@@ -66,3 +66,30 @@ export const defaultListPageLayout: PageLayout = {
   ],
   right: [],
 }
+
+// components for the home page (index)
+export const defaultFrontPageLayout: PageLayout = {
+  beforeBody: [
+    Component.ActivityHeatmap(),
+    Component.RecentNotes({
+      title: "最近編輯",
+      limit: 8,
+      showTags: false,
+    }),
+  ],
+  left: [
+    Component.PageTitle(),
+    Component.MobileOnly(Component.Spacer()),
+    Component.Flex({
+      components: [
+        {
+          Component: Component.Search(),
+          grow: true,
+        },
+        { Component: Component.Darkmode() },
+        { Component: Component.ReaderMode() },
+      ],
+    }),
+  ],
+  right: [Component.ProjectCategories()],
+}

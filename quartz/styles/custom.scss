@@ -1,3 +1,72 @@
 @use "./base.scss";
 
 // put your custom CSS here!
+.page article {
+  max-width: 1200px;
+}
+
+article[data-slug="index"] {
+  .popover-hint {
+    display: none;
+  }
+
+  h1 {
+    font-size: 2.4rem;
+    margin-bottom: 0.6rem;
+  }
+
+  blockquote {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem 1.2rem;
+    border-left: 4px solid var(--secondary);
+    background: color-mix(in srgb, var(--light) 92%, var(--secondary) 8%);
+    border-radius: 14px;
+    font-size: 1rem;
+  }
+
+  .home-card {
+    border: 1px solid var(--lightgray);
+    border-radius: 20px;
+    padding: 1.2rem 1.2rem 1rem;
+    background: var(--light);
+    margin-bottom: 1.2rem;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    h2 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    span {
+      color: var(--gray);
+      font-size: 0.92rem;
+    }
+  }
+
+  ul.section-ul {
+    margin-top: 0;
+  }
+
+  .recent-notes {
+    border: 1px solid var(--lightgray);
+    border-radius: 20px;
+    padding: 1.2rem;
+    background: var(--light);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04);
+  }
+
+  @media (max-width: 900px) {
+    h1 {
+      font-size: 2rem;
+    }
+  }
+}
