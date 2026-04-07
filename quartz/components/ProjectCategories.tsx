@@ -1,5 +1,5 @@
 import { QuartzComponentConstructor, QuartzComponentProps } from "./types"
-import { FullSlug, resolveRelative } from "../util/path"
+import { FullSlug, resolveRelative, simplifySlug } from "../util/path"
 
 function getFileDate(file: QuartzComponentProps["allFiles"][number]): Date | null {
   return file.dates?.modified ?? file.dates?.created ?? file.dates?.published ?? null
@@ -24,18 +24,17 @@ export default (() => {
 
     for (const file of allFiles) {
       const project = file.frontmatter?.project
-      if (!project || typeof project !== "string") continue
+      if (!project || typeof project !== "string" || !file.slug) continue
 
       const fileDate = getFileDate(file)
       const existing = stats.get(project)
 
-      // 找 project landing page
-      // 最理想情況：content/<project>/index.md 會有 slug === project
-      // 若沒有，再 fallback 找第一篇屬於該 project 的筆記
-      const candidateLanding =
-        typeof file.slug === "string" && file.slug === project
-          ? (file.slug as FullSlug)
-          : existing?.landingSlug ?? null
+      // 關鍵：用 simplifySlug 判斷 project landing page
+      // 例如 content/rag-research/index.md 的 FullSlug 可能是 rag-research/index
+      // simplify 後才會是 rag-research
+      const simplified = simplifySlug(file.slug)
+      const isLandingPage = simplified === project
+      const candidateLanding = isLandingPage ? (file.slug as FullSlug) : existing?.landingSlug ?? null
 
       if (!existing) {
         stats.set(project, {
@@ -79,9 +78,9 @@ export default (() => {
               const href =
                 info.landingSlug != null
                   ? resolveRelative(fileData.slug!, info.landingSlug)
-                  : "#"
+                  : undefined
 
-              return (
+              return href ? (
                 <a class="project-item project-link internal" href={href}>
                   <div class="project-main">
                     <span class="project-name">{name}</span>
@@ -91,6 +90,16 @@ export default (() => {
                   </div>
                   <span class="project-count">{info.count}</span>
                 </a>
+              ) : (
+                <div class="project-item project-link project-disabled">
+                  <div class="project-main">
+                    <span class="project-name">{name}</span>
+                    <span class="project-date">
+                      最近更新：{info.latestDate ? formatDate(info.latestDate) : "未知"}
+                    </span>
+                  </div>
+                  <span class="project-count">{info.count}</span>
+                </div>
               )
             })}
           </div>
