@@ -1,8 +1,5 @@
 import { QuartzComponentConstructor, QuartzComponentProps } from "./types"
-
-function projectToHref(projectName: string) {
-  return `${projectName}`
-}
+import { joinSegments, pathToRoot } from "../util/path"
 
 function getFileDate(file: QuartzComponentProps["allFiles"][number]): Date | null {
   return file.dates?.modified ?? file.dates?.created ?? file.dates?.published ?? null
@@ -21,7 +18,8 @@ type ProjectInfo = {
 }
 
 export default (() => {
-  function ProjectCategories({ allFiles }: QuartzComponentProps) {
+  function ProjectCategories(props: QuartzComponentProps) {
+    const { allFiles, fileData } = props
     const stats = new Map<string, ProjectInfo>()
 
     for (const file of allFiles) {
@@ -38,7 +36,6 @@ export default (() => {
         })
       } else {
         let latestDate = existing.latestDate
-
         if (fileDate && (!latestDate || fileDate > latestDate)) {
           latestDate = fileDate
         }
@@ -54,15 +51,12 @@ export default (() => {
       const dateA = a[1].latestDate?.getTime() ?? 0
       const dateB = b[1].latestDate?.getTime() ?? 0
 
-      // 先按最近更新排序
       if (dateB !== dateA) return dateB - dateA
-
-      // 日期相同時，再按數量排序
       if (b[1].count !== a[1].count) return b[1].count - a[1].count
-
-      // 最後按名稱排序
       return a[0].localeCompare(b[0])
     })
+
+    const baseDir = pathToRoot(fileData.slug ?? "")
 
     return (
       <section class="dashboard-card">
@@ -73,17 +67,21 @@ export default (() => {
 
         {items.length > 0 ? (
           <div class="project-grid">
-            {items.map(([name, info]) => (
-              <a class="project-item project-link" href={projectToHref(name)}>
-                <div class="project-main">
-                  <span class="project-name">{name}</span>
-                  <span class="project-date">
-                    最近更新：{info.latestDate ? formatDate(info.latestDate) : "未知"}
-                  </span>
-                </div>
-                <span class="project-count">{info.count}</span>
-              </a>
-            ))}
+            {items.map(([name, info]) => {
+              const href = joinSegments(baseDir, name)
+
+              return (
+                <a class="project-item project-link" href={href}>
+                  <div class="project-main">
+                    <span class="project-name">{name}</span>
+                    <span class="project-date">
+                      最近更新：{info.latestDate ? formatDate(info.latestDate) : "未知"}
+                    </span>
+                  </div>
+                  <span class="project-count">{info.count}</span>
+                </a>
+              )
+            })}
           </div>
         ) : (
           <p class="empty-state">尚未偵測到 project frontmatter。</p>

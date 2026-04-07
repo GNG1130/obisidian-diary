@@ -7,7 +7,7 @@ const ActivityHeatmap = ActivityHeatmapConstructor()
 const ProjectCategories = ProjectCategoriesConstructor()
 const RecentNotes = RecentNotesConstructor({
   title: "最近編輯",
-  limit: 8,
+  limit: 3,
   showTags: false,
 })
 
