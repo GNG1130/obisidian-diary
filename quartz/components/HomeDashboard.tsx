@@ -1,7 +1,15 @@
 import { QuartzComponentConstructor, QuartzComponentProps } from "./types"
-import ActivityHeatmap from "./ActivityHeatmap"
-import ProjectCategories from "./ProjectCategories"
-import RecentNotes from "./RecentNotes"
+import ActivityHeatmapConstructor from "./ActivityHeatmap"
+import ProjectCategoriesConstructor from "./ProjectCategories"
+import RecentNotesConstructor from "./RecentNotes"
+
+const ActivityHeatmap = ActivityHeatmapConstructor()
+const ProjectCategories = ProjectCategoriesConstructor()
+const RecentNotes = RecentNotesConstructor({
+  title: "最近編輯",
+  limit: 8,
+  showTags: false,
+})
 
 export default (() => {
   function HomeDashboard(props: QuartzComponentProps) {
@@ -25,7 +33,7 @@ export default (() => {
             <ActivityHeatmap {...props} />
 
             <section class="home-card recent-card">
-              <RecentNotes {...props} title="最近編輯" limit={8} showTags={false} />
+              <RecentNotes {...props} />
             </section>
           </main>
         </div>
