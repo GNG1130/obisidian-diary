@@ -8,6 +8,12 @@ function startOfDay(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate())
 }
 
+type HeatCell = {
+  date?: string
+  count: number
+  empty?: boolean
+}
+
 export default (() => {
   function ActivityHeatmap({ allFiles }: QuartzComponentProps) {
     const today = startOfDay(new Date())
@@ -17,15 +23,29 @@ export default (() => {
     for (const file of allFiles) {
       const d = file.dates?.modified ?? file.dates?.created ?? file.dates?.published
       if (!d) continue
-
       const key = formatDateKey(startOfDay(d))
       counts.set(key, (counts.get(key) ?? 0) + 1)
     }
 
-    const cells: { date: string; count: number }[] = []
+    const dates: Date[] = []
     for (let i = days - 1; i >= 0; i--) {
       const d = new Date(today)
       d.setDate(today.getDate() - i)
+      dates.push(startOfDay(d))
+    }
+
+    // GitHub-style: columns are weeks, rows are weekdays
+    // We pad the front so the first column starts on Sunday
+    const firstDay = dates[0]
+    const frontPadding = firstDay.getDay() // 0=Sun, 6=Sat
+
+    const cells: HeatCell[] = []
+
+    for (let i = 0; i < frontPadding; i++) {
+      cells.push({ count: 0, empty: true })
+    }
+
+    for (const d of dates) {
       const key = formatDateKey(d)
       cells.push({
         date: key,
@@ -33,7 +53,11 @@ export default (() => {
       })
     }
 
-    const maxCount = Math.max(...cells.map((c) => c.count), 1)
+    while (cells.length % 7 !== 0) {
+      cells.push({ count: 0, empty: true })
+    }
+
+    const maxCount = Math.max(...cells.filter((c) => !c.empty).map((c) => c.count), 1)
 
     const levelClass = (count: number) => {
       if (count === 0) return "lvl-0"
@@ -44,6 +68,13 @@ export default (() => {
       return "lvl-4"
     }
 
+    const weeks: HeatCell[][] = []
+    for (let i = 0; i < cells.length; i += 7) {
+      weeks.push(cells.slice(i, i + 7))
+    }
+
+    const weekdayLabels = ["日", "一", "二", "三", "四", "五", "六"]
+
     return (
       <section class="dashboard-card">
         <div class="dashboard-card-header">
@@ -51,13 +82,30 @@ export default (() => {
           <span>最近 365 天</span>
         </div>
 
-        <div class="activity-heatmap">
-          {cells.map((cell) => (
-            <div
-              class={`heat-cell ${levelClass(cell.count)}`}
-              title={`${cell.date}：${cell.count} 篇`}
-            />
-          ))}
+        <div class="github-heatmap-wrapper">
+          <div class="weekday-labels">
+            {weekdayLabels.map((label) => (
+              <div class="weekday-label">{label}</div>
+            ))}
+          </div>
+
+          <div class="github-heatmap">
+            {weeks.map((week, weekIdx) => (
+              <div class="week-column" key={`week-${weekIdx}`}>
+                {week.map((cell, dayIdx) =>
+                  cell.empty ? (
+                    <div class="heat-cell empty-cell" key={`empty-${weekIdx}-${dayIdx}`} />
+                  ) : (
+                    <div
+                      class={`heat-cell ${levelClass(cell.count)}`}
+                      title={`${cell.date}：${cell.count} 篇`}
+                      key={`${cell.date}-${dayIdx}`}
+                    />
+                  ),
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
         <div class="heatmap-legend">

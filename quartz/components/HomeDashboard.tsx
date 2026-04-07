@@ -18,8 +18,7 @@ export default (() => {
         <section class="hero-card">
           <h1>Raven's Research Page</h1>
           <p>
-            研究筆記、實驗紀錄與專案知識的簡潔入口。
-            從首頁快速查看近期活躍度、專案分類與最近編輯。
+            研究筆記、實驗紀錄與學習的小地方。
           </p>
         </section>
 
