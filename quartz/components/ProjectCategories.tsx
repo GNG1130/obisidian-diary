@@ -56,7 +56,7 @@ export default (() => {
       return a[0].localeCompare(b[0])
     })
 
-    const baseDir = pathToRoot(fileData.slug ?? "")
+    const baseDir = pathToRoot(fileData.slug!)
 
     return (
       <section class="dashboard-card">
