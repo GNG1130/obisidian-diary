@@ -1,5 +1,5 @@
 import { QuartzComponentConstructor, QuartzComponentProps } from "./types"
-import { joinSegments, pathToRoot } from "../util/path"
+import { FullSlug, resolveRelative } from "../util/path"
 
 function getFileDate(file: QuartzComponentProps["allFiles"][number]): Date | null {
   return file.dates?.modified ?? file.dates?.created ?? file.dates?.published ?? null
@@ -15,11 +15,11 @@ function formatDate(date: Date) {
 type ProjectInfo = {
   count: number
   latestDate: Date | null
+  landingSlug: FullSlug | null
 }
 
 export default (() => {
-  function ProjectCategories(props: QuartzComponentProps) {
-    const { allFiles, fileData } = props
+  function ProjectCategories({ allFiles, fileData }: QuartzComponentProps) {
     const stats = new Map<string, ProjectInfo>()
 
     for (const file of allFiles) {
@@ -29,10 +29,19 @@ export default (() => {
       const fileDate = getFileDate(file)
       const existing = stats.get(project)
 
+      // 找 project landing page
+      // 最理想情況：content/<project>/index.md 會有 slug === project
+      // 若沒有，再 fallback 找第一篇屬於該 project 的筆記
+      const candidateLanding =
+        typeof file.slug === "string" && file.slug === project
+          ? (file.slug as FullSlug)
+          : existing?.landingSlug ?? null
+
       if (!existing) {
         stats.set(project, {
           count: 1,
           latestDate: fileDate,
+          landingSlug: candidateLanding,
         })
       } else {
         let latestDate = existing.latestDate
@@ -43,6 +52,7 @@ export default (() => {
         stats.set(project, {
           count: existing.count + 1,
           latestDate,
+          landingSlug: existing.landingSlug ?? candidateLanding,
         })
       }
     }
@@ -56,8 +66,6 @@ export default (() => {
       return a[0].localeCompare(b[0])
     })
 
-    const baseDir = pathToRoot(fileData.slug!)
-
     return (
       <section class="dashboard-card">
         <div class="dashboard-card-header">
@@ -68,10 +76,13 @@ export default (() => {
         {items.length > 0 ? (
           <div class="project-grid">
             {items.map(([name, info]) => {
-              const href = joinSegments(baseDir, name)
+              const href =
+                info.landingSlug != null
+                  ? resolveRelative(fileData.slug!, info.landingSlug)
+                  : "#"
 
               return (
-                <a class="project-item project-link" href={href}>
+                <a class="project-item project-link internal" href={href}>
                   <div class="project-main">
                     <span class="project-name">{name}</span>
                     <span class="project-date">
